@@ -157,4 +157,141 @@ export default function App() {
       {/* Header */}
       <motion.header 
         initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity
+        animate={{ y: 0, opacity: 1 }}
+        className="w-full max-w-4xl flex justify-between items-center mb-8 z-10"
+      >
+        <h1 className="text-3xl font-extrabold flex items-center gap-3 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-500">
+          <Gem className="text-purple-500" /> 주나쌤과 보석들
+        </h1>
+        {mode === 'activity' && (
+          <button
+            onClick={() => setMode('input')}
+            className="flex items-center gap-2 px-4 py-2 bg-white/50 hover:bg-white/70 backdrop-blur-md rounded-full font-medium transition-colors shadow-sm"
+          >
+            <ChevronLeft size={18} /> 설정으로
+          </button>
+        )}
+      </motion.header>
+
+      {/* Main Content Area */}
+      <main className={`w-full max-w-4xl z-10 flex-grow pb-24 ${glassClass} p-6 md:p-8`}>
+        {mode === 'input' && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="space-y-6"
+          >
+             {/* 설정 화면 UI (생략) - 필요시 기존 코드 유지 */}
+             <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold">학생 목록 설정</h2>
+                <button
+                    onClick={() => setMode('activity')}
+                    disabled={students.length === 0}
+                    className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-6 py-2 rounded-full font-bold shadow-md hover:shadow-lg disabled:opacity-50 transition-all"
+                  >
+                    <Play size={18} /> 수업 시작!
+                </button>
+             </div>
+             
+             {/* 기존 학생 추가 입력 폼 등 렌더링 */}
+             <div className="flex gap-2">
+                <input 
+                  type="text" 
+                  value={newName} 
+                  onChange={(e) => setNewName(e.target.value)} 
+                  placeholder="이름 입력" 
+                  className="border p-2 rounded w-full"
+                />
+                <button onClick={addStudent} className="bg-green-500 text-white px-4 rounded">추가</button>
+             </div>
+
+             <ul className="mt-4 space-y-2">
+               {students.map(student => (
+                  <li key={student.id} className="flex justify-between p-2 bg-white/50 rounded">
+                    {student.name}
+                    <button onClick={() => removeStudent(student.id)} className="text-red-500"><Trash2 size={16} /></button>
+                  </li>
+               ))}
+             </ul>
+          </motion.div>
+        )}
+
+        {mode === 'activity' && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="space-y-8"
+          >
+             {/* 상단 Top 3 영역 */}
+             <div className="bg-yellow-50 p-4 rounded-xl shadow-inner mb-6">
+                <h3 className="font-bold flex items-center gap-2 mb-4 text-yellow-700">
+                  <Trophy size={20} /> 명예의 전당
+                </h3>
+                <div className="flex gap-4">
+                  {topThree.map(student => (
+                    <div key={`top-${student.id}`} className="flex flex-col items-center">
+                       <div className="text-2xl">{getExpression(student.score)}</div>
+                       <span className="font-semibold">{student.name}</span>
+                       <span className="text-sm text-gray-500">{student.score}점</span>
+                    </div>
+                  ))}
+                </div>
+             </div>
+
+             {/* 학생 목록 (점수 주는 부분) */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              <AnimatePresence>
+                {students.map(student => (
+                  <motion.div
+                    key={student.id}
+                    layout
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.8, opacity: 0 }}
+                    className="bg-white/60 p-4 rounded-2xl flex flex-col items-center gap-3 shadow-sm hover:shadow-md transition-shadow"
+                  >
+                    {/* ★ 이 부분이 수정된 곳입니다! 이름 첫 글자 대신 표정이 들어갑니다. */}
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-purple-200 to-pink-200 flex items-center justify-center text-3xl shadow-inner">
+                      {getExpression(student.score)}
+                    </div>
+                    
+                    <span className="font-bold text-lg">{student.name}</span>
+                    
+                    <div className="flex items-center gap-3 bg-white/80 px-3 py-1 rounded-full shadow-inner">
+                      <button 
+                        onClick={() => updateScore(student.id, -1)}
+                        className="text-red-400 hover:text-red-600 transition-colors"
+                      >
+                        <Minus size={18} />
+                      </button>
+                      <span className="font-bold w-6 text-center text-purple-700">{student.score}</span>
+                      <button 
+                        onClick={() => updateScore(student.id, 1)}
+                        className="text-green-500 hover:text-green-700 transition-colors"
+                      >
+                        <Plus size={18} />
+                      </button>
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          </motion.div>
+        )}
+      </main>
+
+      {/* ★ 둥둥 떠다니는 정산하기 버튼 */}
+      {mode === 'activity' && (
+        <button 
+          onClick={resetScores} // 임시로 점수 초기화를 연결해두었습니다. 원하는 함수로 바꾸세요.
+          className="fixed bottom-8 right-8 bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-bold px-6 py-4 rounded-full shadow-xl hover:scale-105 transition-transform z-50 flex items-center gap-2 text-lg"
+        >
+          💰 정산하기
+        </button>
+      )}
+
+    </div>
+  );
+}
