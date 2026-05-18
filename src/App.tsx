@@ -167,6 +167,18 @@ export default function App() {
     }
   };
 
+  // 명단 초기화 (현재 학생 목록만 비움 - 저장된 반 명단은 그대로 유지)
+  const clearRoster = () => {
+    if (students.length === 0) return;
+    if (
+      confirm(
+        '현재 명단을 모두 비울까요?\n(저장해둔 반 명단은 그대로 남아있어요)'
+      )
+    ) {
+      setStudents([]);
+    }
+  };
+
   const resetScores = () => {
     setStudents(students.map((s) => ({ ...s, score: 0 })));
   };
@@ -191,7 +203,7 @@ export default function App() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-200 via-purple-200 to-indigo-200 text-slate-800 font-sans p-4 md:p-8 flex flex-col items-center relative overflow-x-hidden">
+    <div className="min-h-screen w-full bg-gradient-to-br from-pink-200 via-purple-200 to-indigo-200 text-slate-800 font-sans p-4 md:p-8 flex flex-col items-center relative overflow-x-clip">
       {/* Decorative Blobs */}
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-pink-400/20 blur-[120px] rounded-full animate-pulse pointer-events-none" />
       <div
@@ -240,7 +252,7 @@ export default function App() {
                 <h2 className="text-xl font-bold flex items-center gap-2">
                   <UserPlus className="text-purple-500" /> 학생 명단
                 </h2>
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
                   <button
                     onClick={() => setShowClassManager(!showClassManager)}
                     className="flex items-center gap-1 px-3 py-2 rounded-xl bg-white/40 hover:bg-white/60 transition text-sm"
@@ -251,7 +263,14 @@ export default function App() {
                     onClick={() => setBulkMode(!bulkMode)}
                     className="flex items-center gap-1 px-3 py-2 rounded-xl bg-white/40 hover:bg-white/60 transition text-sm"
                   >
-                    {bulkMode ? '한 명씩' : '한꺼번에'}
+                    {bulkMode ? '한 명씩 등록' : '한 번에 등록'}
+                  </button>
+                  <button
+                    onClick={clearRoster}
+                    disabled={students.length === 0}
+                    className="flex items-center gap-1 px-3 py-2 rounded-xl bg-white/40 hover:bg-red-100 transition text-sm text-red-500 disabled:opacity-40 disabled:hover:bg-white/40"
+                  >
+                    <RotateCcw size={16} /> 명단 초기화
                   </button>
                 </div>
               </div>
@@ -359,7 +378,7 @@ export default function App() {
               )}
 
               {/* Student List */}
-              <div className="space-y-2 mb-6 max-h-[40vh] overflow-y-auto pr-1">
+              <div className="space-y-2 mb-6">
                 {students.map((student) => (
                   <motion.div
                     key={student.id}
@@ -526,7 +545,7 @@ export default function App() {
                 ))}
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[40vh] overflow-y-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {[...students]
                   .sort((a, b) => b.score - a.score)
                   .slice(3)
