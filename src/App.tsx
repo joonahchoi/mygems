@@ -411,8 +411,9 @@ export default function App() {
                             whileTap={{ scale: 0.95 }}
                             className="bg-white/80 backdrop-blur-md px-6 py-3 rounded-2xl shadow-xl border border-white hover:border-purple-300 transition-all flex items-center gap-3 select-none relative"
                           >
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white text-xl shadow-md">
-                               <Gem size={24} />
+                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white text-2xl shadow-md">
+                              {/* 보석 대신 함수를 넣어줍니다 */}
+                              {getExpression(student.score)}
                             </div>
                             <span className="font-black text-xl text-slate-700">{student.name}</span>
                             
