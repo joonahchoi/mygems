@@ -330,6 +330,17 @@ export default function App() {
                   )}
                 </div>
 
+                <motion.button 
+                onClick={() => setMode('result')}
+                animate={{ y: [0, -10, 0] }} // 위아래로 둥둥 떠다니는 효과
+                transition={{ repeat: Infinity, duration: 2 }}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className="fixed bottom-12 right-12 z-50 px-6 py-4 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white rounded-full font-bold text-xl flex items-center gap-2 shadow-2xl border-4 border-white/40"
+                >
+                <Trophy size={28} /> 정산하기!
+                </motion.button>
+
                 {students.length > 0 && (
                   <div className="mt-8 space-y-4">
                     {/* Save current list section */}
