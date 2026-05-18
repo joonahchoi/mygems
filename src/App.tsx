@@ -138,6 +138,15 @@ export default function App() {
       .slice(0, 3);
   }, [students]);
 
+  const getExpression = (score: number) => {
+    if (score === 0) return '😐'; // 기본 (0점)
+    if (score === 1) return '🙂'; // 1점
+    if (score === 2) return '😊'; // 2점
+    if (score === 3) return '😄'; // 3점
+    if (score === 4) return '😍'; // 4점
+    return '😎'; // 5점 이상
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-200 via-purple-200 to-indigo-200 text-slate-800 font-sans p-4 md:p-8 flex flex-col items-center relative overflow-hidden">
       {/* Decorative Blobs */}
