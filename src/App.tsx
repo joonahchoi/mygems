@@ -5,7 +5,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Plus, Trash2, Trophy, RotateCcw, Play, BarChart3, UserPlus, Star, ChevronLeft, Minus, Save, BookOpen, Download, Layout } from 'lucide-react';
+import { Plus, Trash2, Trophy, RotateCcw, Play, BarChart3, UserPlus, Star, ChevronLeft, Minus, Save, BookOpen, Download, Layout, Gem, Sparkles } from 'lucide-react';
 import { Student, AppMode, SavedClass } from './types';
 
 // Utility for glassmorphism classes
@@ -149,28 +149,29 @@ export default function App() {
       <motion.header 
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="w-full max-w-4xl mb-8 flex justify-between items-center"
+        className="w-full max-w-4xl mb-8 flex justify-between items-center z-20"
       >
         <div className="flex items-center gap-3">
-          <div className="p-3 bg-white/40 rounded-2xl shadow-lg">
-            <Trophy className="text-purple-600" size={32} />
+          <div className="p-3 bg-white/40 rounded-2xl shadow-lg relative">
+            <Gem className="text-purple-600 animate-bounce" size={32} />
+            <Sparkles className="absolute -top-1 -right-1 text-yellow-400" size={16} />
           </div>
           <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600">
-            🤍주나쌤과 보석들🤍
+            🤍주나쌤의 보물들🤍
           </h1>
         </div>
         
         {mode !== 'input' && (
           <button 
             onClick={() => setMode('input')}
-            className="flex items-center gap-2 px-4 py-2 bg-white/40 hover:bg-white/60 transition-all rounded-xl border border-white/50 font-medium"
+            className="flex items-center gap-2 px-4 py-2 bg-white/40 hover:bg-white/60 transition-all rounded-xl border border-white/50 font-medium shadow-sm"
           >
-            <ChevronLeft size={20} /> 학생 관리
+            <ChevronLeft size={20} /> 명단 관리
           </button>
         )}
       </motion.header>
 
-      <main className="w-full max-w-6xl flex-grow flex flex-col items-center">
+      <main className="w-full h-full flex-grow flex flex-col items-center z-10">
         <AnimatePresence mode="wait">
           {mode === 'input' && (
             <motion.div
@@ -184,12 +185,13 @@ export default function App() {
               <div className={`${glassClass} p-6 flex flex-col h-full`}>
                 <div className="flex items-center gap-2 mb-6">
                   <BookOpen className="text-purple-500" />
-                  <h2 className="text-lg font-semibold">저장된 반 명단</h2>
+                  <h2 className="text-lg font-semibold">저장된 보물 상자 (반)</h2>
                 </div>
                 
                 <div className="flex-grow space-y-3 overflow-y-auto pr-2 custom-scrollbar max-h-[500px]">
                   {savedClasses.length === 0 ? (
                     <div className="text-center py-10 px-4 border-2 border-dashed border-white/30 rounded-2xl">
+                      <Gem className="mx-auto text-slate-300 mb-2" size={32} />
                       <p className="text-sm text-slate-500 italic">저장된 명단이 없습니다. 오른쪽에서 명단을 입력 후 저장해보세요.</p>
                     </div>
                   ) : (
@@ -199,9 +201,12 @@ export default function App() {
                         className="group relative bg-white/40 hover:bg-white/60 p-4 rounded-2xl border border-white/50 transition-all cursor-pointer flex justify-between items-center"
                         onClick={() => loadClass(cls)}
                       >
-                        <div>
-                          <p className="font-bold text-purple-700">{cls.name}</p>
-                          <p className="text-xs text-slate-500">{cls.students.length}명의 학생</p>
+                        <div className="flex items-center gap-3">
+                          <Gem size={18} className="text-purple-400" />
+                          <div>
+                            <p className="font-bold text-purple-700">{cls.name}</p>
+                            <p className="text-xs text-slate-500">{cls.students.length}명의 보물들</p>
+                          </div>
                         </div>
                         <button 
                           onClick={(e) => {
@@ -223,7 +228,7 @@ export default function App() {
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-2">
                     <UserPlus className="text-purple-500" />
-                    <h2 className="text-xl font-semibold">현재 학생 목록</h2>
+                    <h2 className="text-xl font-semibold">현재 보물들 입력</h2>
                   </div>
                   <div className="flex gap-2">
                     <button 
@@ -255,7 +260,7 @@ export default function App() {
                         onClick={addBulkStudents}
                         className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-2xl font-bold hover:shadow-lg transition-all flex items-center justify-center gap-2"
                       >
-                        <Plus size={20} /> 목록 전체 추가하기
+                        <Plus size={20} /> 보물 목록 전체 추가하기
                       </button>
                     </motion.div>
                   ) : (
@@ -271,7 +276,7 @@ export default function App() {
                         value={newName}
                         onChange={(e) => setNewName(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && addStudent()}
-                        placeholder="학생 이름을 입력하세요"
+                        placeholder="보물의 이름을 입력하세요"
                         className="flex-grow bg-white/50 border border-white/50 rounded-2xl px-6 py-4 outline-none focus:ring-2 focus:ring-purple-400 transition-all text-lg shadow-inner"
                       />
                       <button 
@@ -286,7 +291,10 @@ export default function App() {
 
                 <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                   {students.length === 0 ? (
-                    <p className="text-center py-10 text-slate-500 italic">등록된 학생이 없습니다.</p>
+                    <div className="flex flex-col items-center justify-center py-10 text-slate-400 italic">
+                       <Sparkles className="mb-2 opacity-50" />
+                       <p>오늘의 보물들을 등록해 주세요!</p>
+                    </div>
                   ) : (
                     students.map(student => (
                       <motion.div 
@@ -296,7 +304,12 @@ export default function App() {
                         key={student.id}
                         className="flex justify-between items-center bg-white/40 p-3 rounded-2xl border border-white/50 group"
                       >
-                        <span className="text-lg font-medium">{student.name}</span>
+                        <div className="flex items-center gap-3">
+                           <div className="w-8 h-8 rounded-full bg-white/50 flex items-center justify-center">
+                              <Star size={16} className="text-yellow-500" />
+                           </div>
+                           <span className="text-lg font-bold text-slate-700">{student.name}</span>
+                        </div>
                         <button 
                           onClick={() => removeStudent(student.id)}
                           className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all opacity-0 group-hover:opacity-100"
@@ -311,21 +324,23 @@ export default function App() {
                 {students.length > 0 && (
                   <div className="mt-8 space-y-4">
                     {/* Save current list section */}
-                    <div className="p-4 bg-white/30 rounded-2xl border border-white/40">
-                      <p className="text-sm font-semibold mb-3 text-slate-600">이 명단을 반으로 저장하기</p>
+                    <div className="p-4 bg-white/30 rounded-2xl border border-white/40 shadow-sm">
+                      <p className="text-sm font-semibold mb-3 text-slate-600 flex items-center gap-2">
+                         <Save size={16} /> 이 명단을 보물 상자(반)로 저장하기
+                      </p>
                       <div className="flex gap-2">
                         <input 
                           type="text"
                           value={newClassName}
                           onChange={(e) => setNewClassName(e.target.value)}
                           placeholder="반 이름을 입력 (예: 3학년 1반)"
-                          className="flex-grow px-4 py-2 bg-white/50 rounded-xl border border-white/50 text-sm focus:ring-2 focus:ring-purple-400 outline-none"
+                          className="flex-grow px-4 py-2 bg-white/50 rounded-xl border border-white/50 text-sm focus:ring-2 focus:ring-purple-400 outline-none shadow-inner"
                         />
                         <button 
                           onClick={saveClass}
-                          className="px-4 py-2 bg-white text-purple-600 border border-purple-200 rounded-xl font-bold text-sm hover:bg-purple-50 transition-all flex items-center gap-2"
+                          className="px-4 py-2 bg-white text-purple-600 border border-purple-200 rounded-xl font-bold text-sm hover:bg-purple-50 transition-all flex items-center gap-2 shadow-sm"
                         >
-                          <Save size={16} /> 저장
+                          <Download size={16} /> 저장
                         </button>
                       </div>
                     </div>
@@ -333,9 +348,9 @@ export default function App() {
                     <div className="flex gap-4">
                       <button 
                         onClick={() => setMode('evaluation')}
-                        className="flex-grow bg-gradient-to-r from-indigo-500 to-purple-500 text-white py-4 rounded-2xl font-bold text-lg hover:shadow-xl hover:scale-[1.02] transition-all flex items-center justify-center gap-2"
+                        className="flex-grow bg-gradient-to-r from-indigo-500 to-purple-500 text-white py-4 rounded-2xl font-bold text-lg hover:shadow-xl hover:scale-[1.02] transition-all flex items-center justify-center gap-2 shadow-lg"
                       >
-                        <Play size={24} /> 오늘 수업 시작
+                        <Play size={24} /> 보석 찾기 시작! (수업 시작)
                       </button>
                       <button 
                         onClick={resetAll}
@@ -359,14 +374,14 @@ export default function App() {
               exit={{ opacity: 0, scale: 1.05 }}
               className="w-full h-full flex flex-col gap-6"
             >
-              <div className={`w-full ${glassClass} p-8 overflow-x-auto relative min-h-[60vh]`}>
+              <div className={`w-full ${glassClass} p-8 overflow-x-auto relative min-h-[60vh] custom-scrollbar z-10`}>
                 <div className="absolute left-10 top-0 bottom-0 w-1 bg-white/30 dash-line" />
                 
-                <div className="space-y-6 py-8">
+                <div className="space-y-6 py-8 min-w-[1200px]">
                   {students.map((student) => (
                     <div key={student.id} className="relative flex items-center h-16 group">
                       {/* Name placeholder on the left */}
-                      <div className="w-32 flex justify-end pr-4 text-slate-500 font-medium z-10">
+                      <div className="w-32 flex justify-end pr-4 text-slate-500 font-bold z-10">
                         {student.name}
                       </div>
 
@@ -377,29 +392,49 @@ export default function App() {
                           transition={{ type: "spring", stiffness: 300, damping: 30 }}
                           initial={false}
                           animate={{ 
-                            x: student.score * 40, // 40px per "step"
+                            x: student.score * 50, // 50px per "step"
                           }}
                           className="flex items-center gap-4 cursor-pointer"
                         >
-                          <div 
+                          <motion.div 
                             onClick={() => updateScore(student.id, 1)}
-                            className="bg-white/80 backdrop-blur-md px-6 py-3 rounded-2xl shadow-xl border border-white hover:scale-110 active:scale-95 transition-transform flex items-center gap-3 select-none"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="bg-white/80 backdrop-blur-md px-6 py-3 rounded-2xl shadow-xl border border-white hover:border-purple-300 transition-all flex items-center gap-3 select-none relative"
                           >
-                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white font-bold">
-                              {student.name.charAt(0)}
+                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white text-xl shadow-md">
+                               <Gem size={24} />
                             </div>
-                            <span className="font-bold text-lg">{student.name}</span>
-                            <div className="ml-2 bg-purple-100 text-purple-600 px-2 py-0.5 rounded-lg text-sm font-bold">
-                              {student.score}
-                            </div>
-                          </div>
+                            <span className="font-black text-xl text-slate-700">{student.name}</span>
+                            
+                            <AnimatePresence>
+                               {student.score > 0 && (
+                                 <motion.div 
+                                   initial={{ opacity: 0, scale: 0 }}
+                                   animate={{ opacity: 1, scale: 1 }}
+                                   className="ml-2 bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-700 px-3 py-1 rounded-full text-sm font-black border border-yellow-300 flex items-center gap-1 shadow-sm"
+                                 >
+                                    <Sparkles size={12} /> {student.score}
+                                 </motion.div>
+                               )}
+                            </AnimatePresence>
+
+                            {/* Click particle effect hint */}
+                            <motion.div 
+                              className="absolute -top-2 -right-2 bg-purple-500 text-white rounded-full p-1 shadow-lg border border-white"
+                              initial={{ scale: 0 }}
+                              whileHover={{ scale: 1 }}
+                            >
+                               <Plus size={12} />
+                            </motion.div>
+                          </motion.div>
 
                           <button 
                             onClick={(e) => {
                               e.stopPropagation();
                               updateScore(student.id, -1);
                             }}
-                            className="p-3 bg-white/40 hover:bg-red-100 text-red-500 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity border border-white/30"
+                            className="p-3 bg-white/40 hover:bg-red-100 text-red-500 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity border border-white/30 shadow-sm"
                             title="뒤로 한칸"
                           >
                             <Minus size={16} />
@@ -414,15 +449,15 @@ export default function App() {
               <div className="flex justify-center gap-4">
                 <button 
                   onClick={resetScores}
-                  className="px-8 py-4 bg-white/40 hover:bg-white/60 rounded-2xl font-bold flex items-center gap-2 transition-all shadow-lg"
+                  className="px-8 py-4 bg-white/40 hover:bg-white/60 rounded-2xl font-bold flex items-center gap-2 transition-all shadow-lg border border-white/50"
                 >
-                  <RotateCcw size={24} /> 점수 리셋
+                  <RotateCcw size={24} /> 보석 리셋
                 </button>
                 <button 
                   onClick={() => setMode('result')}
-                  className="px-12 py-4 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white rounded-2xl font-bold text-xl flex items-center gap-3 hover:scale-105 shadow-xl transition-all"
+                  className="px-12 py-4 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white rounded-2xl font-bold text-xl flex items-center gap-3 hover:scale-105 shadow-xl transition-all border-t border-white/30"
                 >
-                  <BarChart3 size={28} /> 정산하기
+                  <Trophy size={28} /> 보물 상자 정산!
                 </button>
               </div>
             </motion.div>
@@ -434,13 +469,13 @@ export default function App() {
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.5 }}
-              className={`w-full max-w-4xl ${glassClass} p-12 flex flex-col items-center overflow-hidden`}
+              className={`w-full max-w-4xl ${glassClass} p-12 flex flex-col items-center overflow-hidden relative`}
             >
-              <h2 className="text-4xl font-extrabold mb-16 bg-clip-text text-transparent bg-gradient-to-r from-yellow-500 via-purple-500 to-pink-500 animate-pulse text-center">
-                오늘의 명예의 전당
+              <h2 className="text-4xl font-extrabold mb-16 bg-clip-text text-transparent bg-gradient-to-r from-yellow-500 via-purple-500 to-pink-500 animate-pulse text-center flex items-center gap-4">
+                <Sparkles /> 오늘의 최고 보물들 <Sparkles />
               </h2>
 
-              <div className="flex items-end justify-center gap-4 md:gap-8 min-h-[300px] w-full mt-12 relative">
+              <div className="flex items-end justify-center gap-4 md:gap-8 min-h-[300px] w-full mt-12 relative z-10">
                 {/* 2nd Place */}
                 <motion.div 
                   initial={{ y: 200, opacity: 0 }}
@@ -450,9 +485,14 @@ export default function App() {
                 >
                   <div className="mb-4 text-center">
                     <p className="text-2xl font-bold text-slate-600">{topThree[1]?.name || '-'}</p>
-                    <p className="text-slate-400 font-medium">{topThree[1]?.score || 0} pts</p>
+                    <p className="text-slate-400 font-medium flex items-center justify-center gap-1">
+                       <Gem size={14} /> {topThree[1]?.score || 0}
+                    </p>
                   </div>
-                  <div className="w-24 md:w-32 h-44 bg-gradient-to-b from-slate-300 to-slate-500 rounded-t-2xl flex flex-col items-center justify-start pt-4 shadow-inner border-t border-l border-r border-white/30">
+                  <div className="w-24 md:w-32 h-44 bg-gradient-to-b from-slate-300 to-slate-500 rounded-t-3xl flex flex-col items-center justify-start pt-4 shadow-inner border-t border-l border-r border-white/30 relative">
+                     <div className="absolute inset-x-0 -top-4 flex justify-center">
+                        <Star className="text-slate-400" size={32} fill="currentColor" />
+                     </div>
                     <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-3xl font-black text-white/50">2</div>
                   </div>
                 </motion.div>
@@ -467,18 +507,24 @@ export default function App() {
                   <div className="mb-4 text-center transform -translate-y-4">
                     <div className="flex justify-center mb-2">
                        <motion.div
-                         animate={{ rotate: [0, -10, 10, -10, 0] }}
+                         animate={{ rotate: [0, -10, 10, -10, 0], scale: [1, 1.1, 1] }}
                          transition={{ repeat: Infinity, duration: 2 }}
                        >
-                         <Trophy className="text-yellow-400" size={48} fill="currentColor" />
+                         <Trophy className="text-yellow-400" size={64} fill="currentColor" />
                        </motion.div>
                     </div>
-                    <p className="text-3xl font-black text-purple-700">{topThree[0]?.name || '-'}</p>
-                    <p className="text-purple-500 font-bold">{topThree[0]?.score || 0} pts</p>
+                    <p className="text-4xl font-black text-purple-700 drop-shadow-sm">{topThree[0]?.name || '-'}</p>
+                    <p className="text-purple-500 font-black text-xl flex items-center justify-center gap-1 mt-1">
+                       <Gem size={20} className="animate-pulse" /> {topThree[0]?.score || 0}
+                    </p>
                   </div>
-                  <div className="w-32 md:w-44 h-64 bg-gradient-to-b from-yellow-300 to-yellow-600 rounded-t-2xl flex flex-col items-center justify-start pt-4 shadow-xl border-t border-l border-r border-white/50 relative">
-                     <div className="absolute inset-x-0 top-0 h-4 bg-white/40 rounded-t-2xl blur-sm" />
-                    <div className="w-16 h-16 bg-white/30 rounded-full flex items-center justify-center text-5xl font-black text-white/70">1</div>
+                  <div className="w-32 md:w-44 h-64 bg-gradient-to-b from-yellow-300 to-yellow-600 rounded-t-3xl flex flex-col items-center justify-start pt-4 shadow-xl border-t border-l border-r border-white/50 relative overflow-hidden">
+                     <div className="absolute inset-x-0 top-0 h-8 bg-white/40 rounded-t-3xl blur-md" />
+                     <div className="absolute inset-x-0 top-0 h-full w-full opacity-10 pointer-events-none">
+                        <div className="absolute top-4 left-4 w-4 h-4 bg-white rounded-full blur-sm" />
+                        <div className="absolute top-12 right-6 w-8 h-8 bg-white rounded-full blur-md" />
+                     </div>
+                    <div className="w-20 h-20 bg-white/30 rounded-full flex items-center justify-center text-6xl font-black text-white/70 shadow-inner">1</div>
                   </div>
                 </motion.div>
 
@@ -491,20 +537,25 @@ export default function App() {
                 >
                   <div className="mb-4 text-center">
                     <p className="text-xl font-bold text-slate-500">{topThree[2]?.name || '-'}</p>
-                    <p className="text-slate-400 font-medium">{topThree[2]?.score || 0} pts</p>
+                    <p className="text-slate-400 font-medium flex items-center justify-center gap-1 text-sm">
+                       <Gem size={12} /> {topThree[2]?.score || 0}
+                    </p>
                   </div>
-                  <div className="w-24 md:w-32 h-32 bg-gradient-to-b from-orange-300 to-orange-700 rounded-t-2xl flex flex-col items-center justify-start pt-4 shadow-inner border-t border-l border-r border-white/30">
+                  <div className="w-24 md:w-32 h-32 bg-gradient-to-b from-orange-300 to-orange-700 rounded-t-3xl flex flex-col items-center justify-start pt-4 shadow-inner border-t border-l border-r border-white/30 relative">
+                     <div className="absolute inset-x-0 -top-4 flex justify-center">
+                        <Star className="text-orange-400" size={24} fill="currentColor" />
+                     </div>
                     <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-2xl font-black text-white/50">3</div>
                   </div>
                 </motion.div>
               </div>
 
-              <div className="mt-16 flex gap-6">
+              <div className="mt-16 flex gap-6 z-10">
                 <button 
                   onClick={() => setMode('evaluation')}
-                  className="px-8 py-3 bg-white/40 hover:bg-white/60 rounded-2xl font-bold flex items-center gap-2 transition-all"
+                  className="px-8 py-3 bg-white/40 hover:bg-white/60 rounded-2xl font-bold flex items-center gap-2 transition-all border border-white/50 shadow-sm"
                 >
-                  <ChevronLeft size={20} /> 돌아가기
+                  <ChevronLeft size={20} /> 수업으로 돌아가기
                 </button>
                 <button 
                   onClick={() => {
@@ -513,33 +564,38 @@ export default function App() {
                   }}
                   className="px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-2xl font-bold flex items-center gap-2 shadow-lg hover:scale-105 transition-all"
                 >
-                  <RotateCcw size={20} /> 새 게임 시작
+                  <RotateCcw size={20} /> 보석 다시 찾기!
                 </button>
               </div>
 
-               {/* Confetti-like decoration */}
+               {/* Confetti-like decoration with Gems */}
                <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                {[...Array(20)].map((_, i) => (
+                {[...Array(30)].map((_, i) => (
                   <motion.div
                     key={i}
-                    className="absolute w-2 h-2 rounded-full"
+                    className="absolute"
                     style={{
-                      backgroundColor: ['#ffc0cb', '#da70d6', '#9370db', '#ffd700'][i % 4],
                       left: `${Math.random() * 100}%`,
-                      top: `-10px`,
+                      top: `-50px`,
                     }}
                     animate={{
-                      y: [0, 800],
-                      x: [0, (Math.random() - 0.5) * 200],
-                      rotate: [0, 360],
+                      y: [0, 1000],
+                      x: [0, (Math.random() - 0.5) * 300],
+                      rotate: [0, 720],
                     }}
                     transition={{
-                      duration: 2 + Math.random() * 3,
+                      duration: 3 + Math.random() * 4,
                       repeat: Infinity,
-                      delay: Math.random() * 5,
+                      delay: Math.random() * 10,
                       ease: "linear"
                     }}
-                  />
+                  >
+                     {i % 3 === 0 ? (
+                       <Gem size={Math.random() * 10 + 10} className={i % 2 === 0 ? "text-pink-300/40" : "text-purple-300/40"} />
+                     ) : (
+                       <Sparkles size={Math.random() * 10 + 5} className="text-yellow-200/40" />
+                     )}
+                  </motion.div>
                 ))}
               </div>
             </motion.div>
@@ -547,8 +603,8 @@ export default function App() {
         </AnimatePresence>
       </main>
 
-      <footer className="mt-12 text-slate-500 text-sm font-medium opacity-70">
-        © 주나쌤의 보건수업 자료 • CREATED BY 수성중학교 최준아✨
+      <footer className="mt-12 text-slate-500 text-sm font-medium opacity-70 flex items-center gap-2 z-10">
+        주나쌤의 보물들 © 2024 • 반짝이는 수업을 응원합니다! <Sparkles size={14} className="text-yellow-400" />
       </footer>
 
       <style>{`
@@ -558,6 +614,25 @@ export default function App() {
           background-repeat: repeat-y;
         }
         .custom-scrollbar::-webkit-scrollbar {
+          width: 8px;
+          height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(139, 92, 246, 0.2);
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(139, 92, 246, 0.4);
+        }
+      `}</style>
+    </div>
+  );
+}
+it-scrollbar {
           width: 8px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
