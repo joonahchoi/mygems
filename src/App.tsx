@@ -548,7 +548,7 @@ export default function App() {
       </main>
 
       <footer className="mt-12 text-slate-500 text-sm font-medium opacity-70">
-        © 2024 Star Student Podium • Created with ✨
+        © 주나쌤의 보건수업 자료 • CREATED BY 수성중학교 최준아✨
       </footer>
 
       <style>{`
