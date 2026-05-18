@@ -156,7 +156,7 @@ export default function App() {
             <Trophy className="text-purple-600" size={32} />
           </div>
           <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600">
-            Star Student Podium
+            🤍주나쌤과 보석들🤍
           </h1>
         </div>
         
